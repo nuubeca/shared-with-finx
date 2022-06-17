@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Annoter document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crédika</title>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:700,500,300,400" >
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/core/css/styles.min.css') }}">
+    <script type="text/javascript" src="{{ asset('bundles/core/js/vendor/jquery-2.1.3.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/core/js/vendor/modernizr-2.6.2.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/core/js/vendor/prefixfree-1.0.7.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/utility/js/scripts.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/core/js/scripts.min.js') }}"></script>
+</head>
+<body>
+    <div class="ui-file-carousel" data-status-ok="{{ constant('ClientBundle\\Entity\\ClientDocument::STATUS_OK') }}" data-status-unverified="{{ constant('ClientBundle\\Entity\\ClientDocument::STATUS_UNVERIFIED') }}" data-status-incorrect="{{ constant('ClientBundle\\Entity\\ClientDocument::STATUS_INCORRECT') }}" data-status-expired="{{ constant('ClientBundle\\Entity\\ClientDocument::STATUS_EXPIRED') }}">
+        <div class="ui-file-carousel-header">
+            <a class="ui-file-carousel-back-button" href="{{ path('client_document_index', {'client_id' : currentDocument.client.id}) }}">< Retour aux documents</a>
+            <div class="ui-file-carousel-header-content">
+                <span data-file-name>{{ currentDocument.filename }}</span> <span data-file-status-badge>{{ currentDocument.statusBadge|raw }}</span>
+            </div>
+            <div class="ui-file-carousel-header-actions">
+                <a data-file-button-incomplete href="{{ path('client_document_modify_status', {'client_id': currentDocument.client.id, 'document_id': currentDocument.id, 'status': constant('ClientBundle\\Entity\\ClientDocument::STATUS_INCOMPLETE')}) }}" class="ui-button">Incomplet</a>
+                <a data-file-button-invalidate href="{{ path('client_document_modify_status', {'client_id': currentDocument.client.id, 'document_id': currentDocument.id, 'status': constant('ClientBundle\\Entity\\ClientDocument::STATUS_INCORRECT')}) }}" class="ui-button">Invalider</a>
+                <a data-file-button-expire href="{{ path('client_document_modify_status', {'client_id': currentDocument.client.id, 'document_id': currentDocument.id, 'status': constant('ClientBundle\\Entity\\ClientDocument::STATUS_EXPIRED')}) }}" class="ui-button">Expirer</a>
+                <a data-file-button-validate href="{{ path('client_document_modify_status', {'client_id': currentDocument.client.id, 'document_id': currentDocument.id, status: constant('ClientBundle\\Entity\\ClientDocument::STATUS_OK')}) }}" class="ui-button ui-button-primary">Valider</a>
+            </div>
+        </div>
+        <iframe id="frameID" class="ui-file-carousel-viewer" data-annotation-frame src="{{ asset('bundles/core/pdf.js/web/viewer.html?file=' ~ path) }}"></iframe>
+        <div class="ui-file-carousel-main">
+            <div class="ui-file-carousel-control ui-file-carousel-previous" data-carousel-control="previous">
+                <i class="fa fa-chevron-left"></i>
+            </div>
+            <div class="ui-file-carousel-content-wrapper">
+                <div class="ui-file-carousel-content">
+                    {% for document in documents %}
+                        <div class="ui-file-carousel-item{% if document.id == currentDocument.id %} ui-file-carousel-item-current{% endif %}" data-carousel-file-id="{{ document.id }}" data-carousel-file-rotation="{{ document.rotation }}" data-carousel-file-type="{{ document.mimetype }}" data-carousel-file-name="{{ document.filename }}" data-carousel-file-status-badge="{{ document.statusBadge }}" data-carousel-file-status="{{ document.status }}">
+                            <i class="fa fa-file-pdf-o"></i>
+                            <span>{{ document.shortTypeName }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="ui-file-carousel-control" data-carousel-control="next">
+                <i class="fa fa-chevron-right"></i>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
